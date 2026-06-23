@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Sudoku</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Sudoku Master</h1>
+            <div class="controls-top">
+                <div class="control-group">
+                    <label for="mode-select">Game Mode:</label>
+                    <select id="mode-select">
+                        <option value="9x9">Classic 9x9</option>
+                        <option value="4x4">Kids 4x4</option>
+                    </select>
+                </div>
+                <div class="control-group" id="difficulty-group">
+                    <label for="difficulty-select">Difficulty:</label>
+                    <select id="difficulty-select">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div id="sudoku-board" class="mode-9x9"></div>
+
+            <div class="input-panel" id="input-panel">
+                </div>
+
+            <div class="controls-bottom">
+                <button id="new-game-btn" class="btn primary">New Game</button>
+                <button id="clear-btn" class="btn secondary">Clear Board</button>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
