@@ -1,0 +1,210 @@
+:root {
+    --bg-color: #f0f4f8;
+    --card-bg: #ffffff;
+    --text-color: #1a202c;
+    --primary-color: #3182ce;
+    --primary-hover: #2b6cb0;
+    --accent-light: #ebf8ff;
+    --highlight-bg: #edf2f7;
+    --selected-bg: #bee3f8;
+    --error-color: #e53e3e;
+    --error-bg: #fed7d7;
+    --border-thin: 1px solid #cbd5e0;
+    --border-thick: 3px solid #2d3748;
+    --initial-text: #2d3748;
+    --user-text: #3182ce;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.app-container {
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+header h1 {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 1.8rem;
+    color: #2d3748;
+}
+
+.controls-top {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #718096;
+}
+
+select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e0;
+    background-color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+select:focus {
+    border-color: var(--primary-color);
+}
+
+/* Dynamic Grid Layout setups */
+#sudoku-board {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: var(--border-thick);
+    background-color: #fff;
+    touch-action: manipulation;
+}
+
+.mode-9x9 {
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+}
+
+.mode-4x4 {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+/* Cell Styling */
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    border-right: var(--border-thin);
+    border-bottom: var(--border-thin);
+    transition: background-color 0.15s ease;
+}
+
+.mode-9x9 .cell { font-size: 1.4rem; }
+.mode-4x4 .cell { font-size: 2rem; font-weight: 600; }
+
+/* Thick border boundaries for sub-grids */
+.mode-9x9 .cell:nth-child(3n) { border-right: var(--border-thick); }
+.mode-9x9 .cell:nth-child(9n) { border-right: none; }
+.mode-9x9 .cell:nth-child(n+19):nth-child(-n+27),
+.mode-9x9 .cell:nth-child(n+46):nth-child(-n+54) { border-bottom: var(--border-thick); }
+.mode-9x9 .cell:nth-child(n+73) { border-bottom: none; }
+
+.mode-4x4 .cell:nth-child(2n) { border-right: var(--border-thick); }
+.mode-4x4 .cell:nth-child(4n) { border-right: none; }
+.mode-4x4 .cell:nth-child(n+5):nth-child(-n+8) { border-bottom: var(--border-thick); }
+.mode-4x4 .cell:nth-child(n+13) { border-bottom: none; }
+
+/* Highlighting States */
+.cell.initial { color: var(--initial-text); font-weight: 700; background-color: #f7fafc; }
+.cell.user-entered { color: var(--user-text); }
+.cell.highlighted { background-color: var(--highlight-bg); }
+.cell.selected { background-color: var(--selected-bg) !important; }
+.cell.error { background-color: var(--error-bg) !important; color: var(--error-color) !important; }
+
+/* Input Number Pad */
+.input-panel {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+}
+
+.mode-9x9 ~ .input-panel {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.mode-4x4 ~ .input-panel {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.input-btn {
+    padding: 12px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.1s ease;
+}
+
+.input-btn:active, .input-btn:hover {
+    background-color: var(--accent-light);
+    border-color: var(--primary-color);
+}
+
+.input-btn.erase {
+    grid-column: span 1;
+    background-color: #edf2f7;
+    font-size: 0.95rem;
+}
+
+/* Action Buttons */
+.controls-bottom {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn.primary { background-color: var(--primary-color); color: white; }
+.btn.primary:hover { background-color: var(--primary-hover); }
+.btn.secondary { background-color: #e2e8f0; color: #4a5568; }
+.btn.secondary:hover { background-color: #cbd5e0; }
+
+@media (max-width: 450px) {
+    .app-container { padding: 16px; gap: 14px; }
+    header h1 { font-size: 1.5rem; }
+    .cell { font-size: 1.1rem; }
+    .mode-4x4 .cell { font-size: 1.7rem; }
+    .input-btn { padding: 10px 0; font-size: 1.1rem; }
+}
