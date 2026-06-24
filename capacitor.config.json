@@ -1,6 +1,6 @@
 {
-  "appId": "io.abhinav.freesudoku",
-  "appName": "Sudoku Master",
+  "appId": "com.abhinavandroidapps.freesudoku",
+  "appName": "Free Sudoku Master",
   "webDir": ".",
   "bundledWebRuntime": false
 }
