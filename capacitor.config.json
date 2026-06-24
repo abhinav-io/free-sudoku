@@ -1,0 +1,6 @@
+{
+  "appId": "io.abhinav.freesudoku",
+  "appName": "Sudoku Master",
+  "webDir": ".",
+  "bundledWebRuntime": false
+}
