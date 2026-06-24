@@ -3,7 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch: # Allows manual trigger from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,11 +24,15 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
-    - name: Install Mobile Dependencies
+    - name: Initialize and Install Capacitor
       run: |
-        npm init -y
+        # Create a clean package manifest if it doesn't exist
+        if [ ! -f package.json ]; then npm init -y; fi
+        # Install explicit packages 
         npm install @capacitor/core @capacitor/cli @capacitor/android
-        npx cap android add
+
+    - name: Add Android Platform Wrapper
+      run: npx cap add android
 
     - name: Sync Web Files to Android Assets
       run: npx cap sync android
@@ -41,5 +45,5 @@ jobs:
     - name: Upload Finished APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: sudoku-android-app
-        path: android/app/build/outputs/apk/debug/app-debug.apk
+        name: free-sudoku-master-android-app
+        path: android/app/build/outputs/apk/debug/free-sudoku-master-debug.apk
