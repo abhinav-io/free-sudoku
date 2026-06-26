@@ -60,16 +60,22 @@ jobs:
           if (fs.existsSync(file)) {
             let content = fs.readFileSync(file, 'utf8');
             
-            // Cleanly construct the Groovy code block using standard string concatenation to prevent YAML syntax parsing breaks
+            // Define the custom naming logic block
             const customNamingRule = '\n    applicationVariants.all { variant ->\n' +
                                      '        variant.outputs.all { output ->\n' +
                                      '            outputFileName = \"free-sudoku-master-\" + variant.buildType.name + \".apk\"\n' +
                                      '        }\n' +
                                      '    }\n';
             
-            content = content.replace(/}\s*$/s, customNamingRule + '\n}');
-            fs.writeFileSync(file, content);
-            console.log('Successfully injected custom naming rule into build.gradle');
+            // Target the closing brace of 'buildTypes { ... }' which is guaranteed to be inside the android block
+            if (content.includes('buildTypes {')) {
+              content = content.replace(/buildTypes\s*\{[\s\S]*?\}/, (match) => match + '\n' + customNamingRule);
+              fs.writeFileSync(file, content);
+              console.log('Successfully injected custom naming rule inside the android block');
+            } else {
+              console.error('Could not find buildTypes block to anchor injection!');
+              process.exit(1);
+            }
           } else {
             console.error('Target build.gradle file not found!');
             process.exit(1);
