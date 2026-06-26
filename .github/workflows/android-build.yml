@@ -40,8 +40,8 @@ jobs:
           if (fs.existsSync('capacitor.config.json')) {
             config = JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8'));
           }
-          config.appId = config.appId || 'io.abhinav.freesudoku';
-          config.appName = config.appName || 'Sudoku Master';
+          config.appId = config.appId || 'com.abhinavandroidapps.freesudokumaster';
+          config.appName = config.appName || 'Free Sudoku Master';
           config.webDir = 'dist';
           fs.writeFileSync('capacitor.config.json', JSON.stringify(config, null, 2));
         "
@@ -54,20 +54,19 @@ jobs:
 
     - name: Inject Custom Gradle Output Filename
       run: |
-        # Use Node to cleanly append the custom naming rule to the generated build.gradle file
         node -e "
           const fs = require('fs');
           const file = 'android/app/build.gradle';
           if (fs.existsSync(file)) {
             let content = fs.readFileSync(file, 'utf8');
-            const customNamingRule = \`
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            outputFileName = 'free-sudoku-master-' + variant.buildType.name + '.apk'
-        }
-    }
-\`;
-            // Inject our rule right before the closing brace of the android block
+            
+            // Cleanly construct the Groovy code block using standard string concatenation to prevent YAML syntax parsing breaks
+            const customNamingRule = '\n    applicationVariants.all { variant ->\n' +
+                                     '        variant.outputs.all { output ->\n' +
+                                     '            outputFileName = \"free-sudoku-master-\" + variant.buildType.name + \".apk\"\n' +
+                                     '        }\n' +
+                                     '    }\n';
+            
             content = content.replace(/}\s*$/s, customNamingRule + '\n}');
             fs.writeFileSync(file, content);
             console.log('Successfully injected custom naming rule into build.gradle');
