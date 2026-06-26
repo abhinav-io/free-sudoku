@@ -31,11 +31,22 @@ jobs:
 
     - name: Prepare Web Assets Folder
       run: |
-        # Create a dedicated directory for the build assets to prevent root looping
+        # Create a dedicated directory for the build assets
         mkdir -p dist
         cp index.html style.css script.js dist/
-        # Update capacitor config to point directly to this folder
-        sed -i 's/"webDir": ""/"webDir": "dist"/' capacitor.config.json
+        
+        # Safely overwrite or fix capacitor.config.json using Node
+        node -e "
+          const fs = require('fs');
+          let config = {};
+          if (fs.existsSync('capacitor.config.json')) {
+            config = JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8'));
+          }
+          config.appId = config.appId || 'io.abhinav.freesudoku';
+          config.appName = config.appName || 'Sudoku Master';
+          config.webDir = 'dist'; // Force it to point to our clean folder
+          fs.writeFileSync('capacitor.config.json', JSON.stringify(config, null, 2));
+        "
 
     - name: Add Android Platform Wrapper
       run: npx cap add android
